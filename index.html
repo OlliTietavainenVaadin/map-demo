@@ -26,18 +26,22 @@
 <google-map-directions start-address="Oakland" end-address="Mountain View"
             language="en"></google-map-directions>
 
-</div>
 <vaadin-combo-box id ="lat-combo" label="Lat">
 </vaadin-combo-box>
 <vaadin-combo-box id="lon-combo" label="Lon">
 </vaadin-combo-box>
+
 <button id="controlsToggle" onclick="go()">Go</button>
+</div>
 <script>
   var gmap = document.querySelector('google-map');
   var latCombo = document.getElementById('lat-combo');
   var lonCombo = document.getElementById('lon-combo');
   var lats = [];
   var lons = [];
+  var lons = [];	
+  var markers = [];
+
   for (var i = 0; i <= 90; i++) {
 	lats.push(i);
 	lons.push(i);
@@ -48,7 +52,6 @@
     document.querySelector('google-map-directions').map = this.map;
   });
   function go() {
-
     var myLatLng = {lat: latCombo.selectedItem, lng: lonCombo.selectedItem};
 	var map = new google.maps.Map(gmap, {
           zoom: 12,
@@ -59,7 +62,6 @@
           map: map,
           title: 'Hello World!'
         });
-	gmap.markers.push(marker);
   }
   var marker = document.querySelector('google-map-marker');
   var poly = document.querySelector('google-map-poly');
