@@ -1,0 +1,76 @@
+<!doctype html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+  <title>Google Map + Vaadin demo</title>
+  <script src="bower_components/webcomponentsjs/webcomponents-lite.min.js"></script>
+  <link rel="import" href="bower_components/google-map/google-map.html">
+  <link rel="import" href="bower_components/google-map/google-map-marker.html">
+  <link rel="import" href="bower_components/google-map/google-map-poly.html">
+  <link rel="import" href="bower_components/google-map/google-map-directions.html">
+  <link rel="import" href="bower_components/vaadin-core-elements/vaadin-core-elements.html">
+  <style>
+    .main {
+      height: 600px;
+	  width: 400px;
+    }
+  </style>
+</head>
+<body>
+<div class="main">
+<google-map latitude="37.779" longitude="-122.3892" min-zoom="9" max-zoom="11"
+            language="en">
+
+</google-map>
+
+<google-map-directions start-address="Oakland" end-address="Mountain View"
+            language="en"></google-map-directions>
+
+</div>
+<vaadin-combo-box id ="lat-combo" label="Lat">
+</vaadin-combo-box>
+<vaadin-combo-box id="lon-combo" label="Lon">
+</vaadin-combo-box>
+<button id="controlsToggle" onclick="go()">Go</button>
+<script>
+  var gmap = document.querySelector('google-map');
+  var latCombo = document.getElementById('lat-combo');
+  var lonCombo = document.getElementById('lon-combo');
+  var lats = [];
+  var lons = [];
+  for (var i = 0; i <= 90; i++) {
+	lats.push(i);
+	lons.push(i);
+  }
+  latCombo.items = lats;
+  lonCombo.items = lons;
+  gmap.addEventListener('api-load', function(e) {
+    document.querySelector('google-map-directions').map = this.map;
+  });
+  function go() {
+
+    var myLatLng = {lat: latCombo.selectedItem, lng: lonCombo.selectedItem};
+	var map = new google.maps.Map(gmap, {
+          zoom: 12,
+          center: myLatLng
+        });
+	var marker = new google.maps.Marker({
+          position: myLatLng,
+          map: map,
+          title: 'Hello World!'
+        });
+	gmap.markers.push(marker);
+  }
+  var marker = document.querySelector('google-map-marker');
+  var poly = document.querySelector('google-map-poly');
+  var point = document.querySelector('google-map-point');
+  marker.addEventListener('google-map-marker-dragend', function(e) {
+    var latLng = e.detail.latLng;
+    console.log('pin dropped', latLng.lat(), latLng.lng());
+    point.latitude = latLng.lat();
+    point.longitude = latLng.lng();
+    poly._buildPathFromPoints();
+  });
+</script>
+</body>
+</html>
